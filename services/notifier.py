@@ -8,6 +8,30 @@ ARTICLE_SEPARATOR = "\n---\n"
 EMBED_DESCRIPTION_LIMIT = 4096
 POST_DELAY_SEC = 1.5
 
+def _split_body(body, max_len):
+    if len(body) <= max_len:
+        return [body]
+    chunks = []
+    remaining = body
+    while remaining:
+        if len(remaining) <= max_len:
+            chunks.append(remaining)
+            break
+        cut = remaining[:max_len]
+        last_para = cut.rfind("\n\n")
+        if last_para > max_len // 2:
+            chunks.append(remaining[:last_para + 1].strip())
+            remaining = remaining[last_para + 1:].strip()
+        else:
+            last_newline = cut.rfind("\n")
+            if last_newline > max_len // 2:
+                chunks.append(remaining[:last_newline + 1].strip())
+                remaining = remaining[last_newline + 1:].strip()
+            else:
+                chunks.append(remaining[:max_len])
+                remaining = remaining[max_len:].strip()
+    return chunks
+
 def _parse_articles(content):
     raw_blocks = [b.strip() for b in content.split(ARTICLE_SEPARATOR) if b.strip()]
     articles = []
@@ -32,13 +56,18 @@ def send_to_discord(content):
     if articles:
         for a in articles:
             time.sleep(POST_DELAY_SEC)
-            desc = a["body"]
-            if len(desc) > EMBED_DESCRIPTION_LIMIT:
-                desc = desc[:EMBED_DESCRIPTION_LIMIT - 3] + "..."
-            embed = {"title": f"{a['idx']}. {a['title']}"[:256], "url": a["url"], "description": desc, "color": 5814783}
-            data = {"embeds": [embed], "username": Constants.BOT_NAME, "avatar_url": Constants.BOT_AVATAR_URL}
-            resp = requests.post(webhook_url, json=data)
-            resp.raise_for_status()
+            body_chunks = _split_body(a["body"], EMBED_DESCRIPTION_LIMIT)
+            for i, chunk in enumerate(body_chunks):
+                if i > 0:
+                    time.sleep(POST_DELAY_SEC)
+                title = f"{a['idx']}. {a['title']}"
+                if len(body_chunks) > 1:
+                    title = f"{title} ({i+1}/{len(body_chunks)})"
+                title = title[:256]
+                embed = {"title": title, "url": a["url"], "description": chunk, "color": 5814783}
+                data = {"embeds": [embed], "username": Constants.BOT_NAME, "avatar_url": Constants.BOT_AVATAR_URL}
+                resp = requests.post(webhook_url, json=data)
+                resp.raise_for_status()
         return "Report Sent Successfully"
     final_content = content
     chunk_size = Constants.DISCORD_CHUNK_SIZE

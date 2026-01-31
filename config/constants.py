@@ -13,9 +13,12 @@ class Constants:
     
     # [URL, Source Name, Fetch Limit]
     NEWS_SOURCES = [
-        ("https://news.naver.com/main/rss/rss_flash.nhn?mode=LSD&mid=sec&sid1=101", "Naver Economy", 5),
-        ("https://www.mk.co.kr/rss/30000001/", "MK News", 5),
-        ("https://fs.jtbc.co.kr/RSS/newsflash.xml", "JTBC News", 5)
+        ("https://www.yna.co.kr/rss/economy.xml", "연합뉴스 경제", 5),
+        ("https://www.yna.co.kr/rss/international.xml", "연합뉴스 국제", 5),
+        ("https://www.yna.co.kr/rss/industry.xml", "연합뉴스 산업/IT", 5),
+        ("https://www.hankyung.com/feed/economy", "한국경제 경제", 5),
+        ("https://www.hankyung.com/feed/international", "한국경제 국제", 5),
+        ("https://www.hankyung.com/feed/it", "한국경제 IT", 5),
     ]
 
     # 3. 디스코드 봇 설정
