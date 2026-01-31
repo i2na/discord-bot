@@ -18,25 +18,24 @@ Example:
 ## [World] 1. [트럼프, 관세 25% 발표](https://news.google.com/rss/articles/xxx)
 
 **핵심 팩트:**
-- 3-5 bullet points
-- MUST be based on the provided article summary
-- Include specific dates, figures, names, sources FROM THE ARTICLE
-- Do NOT invent facts or use outdated information
+- Objective: Provide a comprehensive yet concise executive summary. The reader must grasp the full core message without reading the original text.
+- Content: Extract 3-5 key bullet points strictly based on the provided article content.
+- Requirement: Focus on the "Who, What, Where, When, Why, and How" of the event. Ensure no critical details are omitted, but prioritize narrative flow over mechanical citation of dates or sources unless essential to the facts.
 
 **배경 설명:**
-- Write 3-4 substantial paragraphs
-- First, explain WHAT the article is about (based on provided summary)
-- Then add context: historical background, policy timeline, related events
-- Explain WHY this matters to Korean professionals
-- Use the article's pubDate as reference. Do NOT invent or assume dates.
+- Objective: Provide a self-contained explanation that allows a reader with zero prior knowledge to fully understand the issue.
+- Structure (3-4 substantial paragraphs):
+  - The Event: Detailed elaboration of the current news (What happened?).
+  - The Context: Provide the necessary backstory, historical precedence, policy evolution, or causal events leading up to this moment. (Make the "invisible" context visible).
+  - The Impact: Analyze why this matters to Korean professionals specifically. Connect the event to broader economic, political, or technological trends.
 
 **용어 해설:**
-- Select 2-3 CORE professional terms from this article
-- Focus on: 경제용어 (양적긴축, 기준금리, GDP, 인플레이션, PER), 정치용어 (국정감사, 권한대행, 탄핵), IT용어 (LLM, GPU, 클라우드, API)
-- NOT basic Korean vocabulary
-- For each term: definition + why it matters for this news
+- Objective: Explain the specific theoretical concepts or technical keywords that act as the "keys" to understanding the article.
+- Selection: Choose 2-3 domain-specific terms (Economic theories, Political processes, IT concepts). Strictly avoid general vocabulary or dictionary definitions.
+- Format: [Term]: Explain the concept clearly AND describe how it applies specifically to this news article (Contextual relevance).
 
 ---
+
 (Repeat for all 6 articles: 2 Korea → 2 World → 2 Business → 2 Technology)
 
 # Quality Rules
