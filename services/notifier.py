@@ -34,11 +34,11 @@ def _parse_articles(content):
     raw_blocks = [b.strip() for b in content.split(ARTICLE_SEPARATOR) if b.strip()]
     articles = []
     for block in raw_blocks:
-        match = re.match(r'^## (\d+)\. \[(.+?)\]\((https?://[^\)]+)\)', block)
+        match = re.match(r'^## \[(\w+)\] (\d+)\. \[(.+?)\]\((https?://[^\)]+)\)', block)
         if match:
-            idx, title, url = match.group(1), match.group(2), match.group(3)
+            topic, idx, title, url = match.group(1), match.group(2), match.group(3), match.group(4)
             body = block[match.end():].strip()
-            articles.append({"idx": idx, "title": title, "url": url, "body": body})
+            articles.append({"topic": topic, "idx": idx, "title": title, "url": url, "body": body})
     return articles
 
 def send_to_discord(content):
@@ -46,7 +46,7 @@ def send_to_discord(content):
     if not webhook_url:
         return "Error: Webhook URL missing"
     today = datetime.datetime.now().strftime("%Y년 %m월 %d일")
-    header_msg = f"# 📰 {today} 시사 브리핑\n오늘 꼭 알아야 할 뉴스 5가지를 정리해 드립니다."
+    header_msg = f"# 📰 {today} 시사 브리핑\n오늘 꼭 알아야 할 뉴스 6가지를 정리해 드립니다."
     header_data = {"content": header_msg, "username": Constants.BOT_NAME, "avatar_url": Constants.BOT_AVATAR_URL}
     resp = requests.post(webhook_url, json=header_data)
     resp.raise_for_status()
@@ -63,7 +63,7 @@ def send_to_discord(content):
                     resp.raise_for_status()
                     time.sleep(Constants.DISCORD_POST_DELAY_SEC)
                     batch, batch_len = [], 0
-                title = f"{a['idx']}. {a['title']}"[:256]
+                title = f"[{a['topic']}] {a['idx']}. {a['title']}"[:256]
                 if len(body_chunks) > 1:
                     title = f"{title} ({i+1}/{len(body_chunks)})"[:256]
                 batch.append({"title": title, "url": a["url"], "description": chunk, "color": 5814783})

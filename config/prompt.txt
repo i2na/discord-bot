@@ -10,7 +10,14 @@ From each topic feed (already sorted by importance), pick the **2 most significa
 
 # Output Structure (per article)
 
-## [World/Business/Technology] N. [기사 제목](URL)
+CRITICAL: Use EXACTLY this format for the heading:
+
+## [World] 1. [기사 제목](https://news.google.com/rss/...)
+
+Example:
+## [World] 1. [트럼프, 관세 25% 발표](https://news.google.com/rss/articles/xxx)
+## [Business] 3. [연준 금리 동결](https://news.google.com/rss/articles/yyy)
+## [Technology] 5. [애플 AI 전략 발표](https://news.google.com/rss/articles/zzz)
 
 **핵심 팩트:**
 - 3-5 bullet points
