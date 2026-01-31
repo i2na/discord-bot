@@ -32,7 +32,7 @@ def analyze_news(news_text):
                 {"role": "user", "content": f"Here is the raw news feed:\n{news_text}"}
             ],
             temperature=0.5,
-            max_tokens=16384
+            max_tokens=32768
         )
         return response.choices[0].message.content
     except Exception as e:

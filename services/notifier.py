@@ -6,7 +6,8 @@ from config.constants import Constants
 
 ARTICLE_SEPARATOR = "\n---\n"
 EMBED_DESCRIPTION_LIMIT = 4096
-POST_DELAY_SEC = 1.5
+EMBED_TOTAL_PER_MESSAGE = 6000
+POST_DELAY_SEC = 2
 
 def _split_body(body, max_len):
     if len(body) <= max_len:
@@ -57,15 +58,21 @@ def send_to_discord(content):
         for a in articles:
             time.sleep(POST_DELAY_SEC)
             body_chunks = _split_body(a["body"], EMBED_DESCRIPTION_LIMIT)
+            batch, batch_len = [], 0
             for i, chunk in enumerate(body_chunks):
-                if i > 0:
+                if batch_len + len(chunk) > EMBED_TOTAL_PER_MESSAGE and batch:
+                    data = {"embeds": batch, "username": Constants.BOT_NAME, "avatar_url": Constants.BOT_AVATAR_URL}
+                    resp = requests.post(webhook_url, json=data)
+                    resp.raise_for_status()
                     time.sleep(POST_DELAY_SEC)
-                title = f"{a['idx']}. {a['title']}"
+                    batch, batch_len = [], 0
+                title = f"{a['idx']}. {a['title']}"[:256]
                 if len(body_chunks) > 1:
-                    title = f"{title} ({i+1}/{len(body_chunks)})"
-                title = title[:256]
-                embed = {"title": title, "url": a["url"], "description": chunk, "color": 5814783}
-                data = {"embeds": [embed], "username": Constants.BOT_NAME, "avatar_url": Constants.BOT_AVATAR_URL}
+                    title = f"{title} ({i+1}/{len(body_chunks)})"[:256]
+                batch.append({"title": title, "url": a["url"], "description": chunk, "color": 5814783})
+                batch_len += len(chunk)
+            if batch:
+                data = {"embeds": batch, "username": Constants.BOT_NAME, "avatar_url": Constants.BOT_AVATAR_URL}
                 resp = requests.post(webhook_url, json=data)
                 resp.raise_for_status()
         return "Report Sent Successfully"

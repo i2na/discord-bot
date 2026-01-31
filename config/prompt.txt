@@ -36,4 +36,4 @@ Select TOP 5 essential news from the feed.
 1. Language: Korean, polite tone (합니다/입니다)
 2. No emojis, clean markdown only
 3. **Depth:** 400-600 words per article minimum. Depth over brevity.
-4. **Completeness:** Never truncate. Never end with "...". Finish every sentence and section fully.
+4. **Completeness:** Output ALL 5 articles fully. Every article MUST have 핵심 팩트, 배경 설명, 용어 해설. Never truncate. Never end with "...". Do not omit article 5 or any section.
