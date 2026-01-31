@@ -61,11 +61,7 @@ def _parse_articles(content: str) -> list:
 
 
 class DiscordNotifier(Notifier):
-    def notify(self, content: str, config: BotConfig) -> str:
-        webhook_url = config.webhook_url
-        if not webhook_url:
-            return "Error: Webhook URL missing"
-
+    def _send_to_webhook(self, webhook_url: str, content: str, config: BotConfig) -> None:
         today = datetime.datetime.now().strftime("%Y년 %m월 %d일")
         header_data = {
             "content": f"# 📰 {today} 브리핑",
@@ -103,10 +99,8 @@ class DiscordNotifier(Notifier):
                     data = {"embeds": batch, "username": config.name, "avatar_url": config.avatar_url}
                     resp = requests.post(webhook_url, json=data)
                     resp.raise_for_status()
+            return
 
-            return "Report Sent Successfully"
-
-        # Fallback: plain text chunks
         chunks = [content[i:i+DISCORD_CHUNK_SIZE] for i in range(0, len(content), DISCORD_CHUNK_SIZE)]
         for chunk in chunks:
             time.sleep(DISCORD_POST_DELAY_SEC)
@@ -114,4 +108,14 @@ class DiscordNotifier(Notifier):
             resp = requests.post(webhook_url, json=data)
             resp.raise_for_status()
 
-        return "Report Sent Successfully"
+    def notify(self, content: str, config: BotConfig) -> str:
+        if not config.webhook_url:
+            return "Error: Webhook URL missing"
+
+        webhook_urls = [url.strip() for url in config.webhook_url.split(",") if url.strip()]
+
+        for i, url in enumerate(webhook_urls):
+            print(f"[{config.name}] Sending to webhook {i+1}/{len(webhook_urls)}")
+            self._send_to_webhook(url, content, config)
+
+        return f"Report Sent Successfully to {len(webhook_urls)} webhook(s)"
