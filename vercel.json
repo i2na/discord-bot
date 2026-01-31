@@ -2,7 +2,7 @@
     "crons": [
         {
             "path": "/api?bot=sisa-go",
-            "schedule": "0 13 * * *"
+            "schedule": "0 0 * * *"
         }
     ]
 }
