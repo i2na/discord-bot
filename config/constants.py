@@ -19,6 +19,6 @@ class Constants:
     ]
 
     # 3. 디스코드 봇 설정
-    BOT_NAME = "Daily News Briefing"
-    BOT_AVATAR_URL = "https://cdn-icons-png.flaticon.com/512/3209/3209994.png"
-    MAX_MESSAGE_LENGTH = 1900
+    BOT_NAME = "SISA-GO"
+    BOT_AVATAR_URL = "https://cdn-icons-png.flaticon.com/512/2965/2965879.png"
+    DISCORD_CHUNK_SIZE = 1900
