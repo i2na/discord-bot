@@ -1,32 +1,56 @@
 from http.server import BaseHTTPRequestHandler
 import os
 import json
-from datetime import datetime
-from duckduckgo_search import DDGS
+import urllib.request
+import xml.etree.ElementTree as ET
 from openai import OpenAI
 import requests
 
-# 1. 환경 변수 설정 (Vercel에서 설정할 것임)
+# 1. 환경 변수 설정
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL")
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-# 2. 뉴스 검색 함수 (무료 라이브러리 사용)
+# 2. 뉴스 검색 함수 (구글 뉴스 RSS - 차단 없음)
 def get_news():
-    print("Collecting Intel...")
-    results = []
+    print("Collecting Intel from RSS...")
+    # '한국 경제 사회' 키워드로 최근 24시간(when:1d) 뉴스 검색
+    rss_url = "https://news.google.com/rss/search?q=한국+경제+사회+주요뉴스+when:1d&hl=ko&gl=KR&ceid=KR:ko"
+    
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+    }
+
     try:
-        # '한국 경제' 키워드로 최근 1일치 검색
-        with DDGS() as ddgs:
-            ddgs_gen = ddgs.news("한국 경제 사회 이슈", region="kr-kr", timelimit="d", max_results=5)
-            for r in ddgs_gen:
-                results.append(f"Title: {r['title']}\nLink: {r['url']}\nSummary: {r['body']}\n---")
+        req = urllib.request.Request(rss_url, headers=headers)
+        with urllib.request.urlopen(req) as response:
+            xml_data = response.read()
+            
+        root = ET.fromstring(xml_data)
+        news_list = []
+        count = 0
+        
+        for item in root.findall('.//item'):
+            if count >= 5: break # 상위 5개만
+            
+            title = item.find('title').text
+            link = item.find('link').text
+            # 설명이 없는 경우가 있어 예외처리
+            desc = item.find('description')
+            description = desc.text if desc is not None else "내용 요약 없음"
+            
+            # HTML 태그 제거 (간단하게)
+            description = description.replace('<b>', '').replace('</b>', '').replace('&quot;', '"')
+            
+            news_list.append(f"Title: {title}\nLink: {link}\nSummary: {description}\n---")
+            count += 1
+            
+        return "\n".join(news_list)
+
     except Exception as e:
         print(f"Intel collection failed: {e}")
         return None
-    
-    return "\n".join(results)
 
 # 3. LLM 분석 함수 (Shadow Analyst 페르소나)
 def analyze_news(news_text):
@@ -66,10 +90,11 @@ You treat news as "Classified Intelligence".
 (Repeat for Top 3 topics)
 
 **// END OF TRANSMISSION.**
+**// DESTROY THIS MESSAGE AFTER READING.**
     """
 
     response = client.chat.completions.create(
-        model="gpt-4o", # 비용 절약하려면 "gpt-3.5-turbo"로 변경 가능
+        model="gpt-4o", 
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": f"Here is the raw intel:\n{news_text}"}
@@ -82,23 +107,25 @@ def send_to_discord(content):
     data = {
         "content": content,
         "username": "Shadow Analyst",
-        "avatar_url": "https://cdn-icons-png.flaticon.com/512/2919/2919600.png" # 비밀 요원 느낌 아이콘
+        "avatar_url": "https://cdn-icons-png.flaticon.com/512/2919/2919600.png"
     }
     requests.post(DISCORD_WEBHOOK_URL, json=data)
 
-# 5. Vercel용 핸들러 (메인 실행부)
+# 5. Vercel용 핸들러
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         print("Mission Start.")
         news = get_news()
-        if news:
+        
+        # 뉴스 데이터가 있으면 분석 시작
+        if news and len(news) > 10:
             report = analyze_news(news)
             send_to_discord(report)
             self.send_response(200)
             self.end_headers()
-            self.wfile.write('Mission Complete'.encode('utf-8'))
+            self.wfile.write('Mission Complete: Report Sent'.encode('utf-8'))
         else:
-            self.send_response(500)
+            self.send_response(200) # 에러로 처리하면 재시도하므로 200으로 처리하되 메시지 남김
             self.end_headers()
-            self.wfile.write('Mission Failed: No News'.encode('utf-8'))
+            self.wfile.write('Mission Incomplete: News Source Unreachable'.encode('utf-8'))
         return
