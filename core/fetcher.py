@@ -1,3 +1,4 @@
+import re
 import requests
 import xml.etree.ElementTree as ET
 from .interfaces import Fetcher
@@ -6,6 +7,15 @@ from .interfaces import Fetcher
 USER_AGENT = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
 }
+
+
+def _extract_description(raw_desc: str) -> str:
+    if not raw_desc:
+        return ""
+    text = re.sub(r'<[^>]+>', ' ', raw_desc)
+    text = text.replace('&amp;', '&').replace('&quot;', '"').replace('&lt;', '<').replace('&gt;', '>').replace('&nbsp;', ' ')
+    text = ' '.join(text.split())
+    return text
 
 
 class RSSFetcher(Fetcher):
@@ -40,15 +50,25 @@ class RSSFetcher(Fetcher):
                 title_node = item.find('title')
                 link_node = item.find('link')
                 source_node = item.find('source')
+                desc_node = item.find('description')
+                pub_date_node = item.find('pubDate')
 
                 title = title_node.text if title_node is not None else ""
                 link = link_node.text if link_node is not None else ""
                 publisher = source_node.text if source_node is not None else source_name
+                description = _extract_description(desc_node.text if desc_node is not None else "")
+                pub_date = pub_date_node.text if pub_date_node is not None else ""
 
                 if not title or not link:
                     continue
 
-                news_items.append(f"[{publisher}] {title} | Link: {link}")
+                entry = f"[Topic: {source_name}] [{publisher}] {title}\nLink: {link}"
+                if pub_date:
+                    entry += f"\nDate: {pub_date}"
+                if description:
+                    entry += f"\nSummary: {description}"
+
+                news_items.append(entry)
                 count += 1
 
             return news_items

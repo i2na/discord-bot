@@ -19,14 +19,16 @@ Example:
 
 **핵심 팩트:**
 - 3-5 bullet points
-- Include specific dates, figures, names, sources
-- Be concrete and detailed
+- MUST be based on the provided article summary
+- Include specific dates, figures, names, sources FROM THE ARTICLE
+- Do NOT invent facts or use outdated information
 
 **배경 설명:**
 - Write 3-4 substantial paragraphs
-- Cover: historical context, policy timeline, related events, current significance
-- Use your knowledge to enrich beyond the RSS summary
-- Explain WHY this matters
+- First, explain WHAT the article is about (based on provided summary)
+- Then add context: historical background, policy timeline, related events
+- Explain WHY this matters to Korean professionals
+- Use the article's pubDate as reference. Do NOT invent or assume dates.
 
 **용어 해설:**
 - Select 2-3 CORE professional terms from this article
