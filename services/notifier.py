@@ -5,9 +5,6 @@ import datetime
 from config.constants import Constants
 
 ARTICLE_SEPARATOR = "\n---\n"
-EMBED_DESCRIPTION_LIMIT = 4096
-EMBED_TOTAL_PER_MESSAGE = 6000
-POST_DELAY_SEC = 2
 
 def _split_body(body, max_len):
     if len(body) <= max_len:
@@ -56,15 +53,15 @@ def send_to_discord(content):
     articles = _parse_articles(content)
     if articles:
         for a in articles:
-            time.sleep(POST_DELAY_SEC)
-            body_chunks = _split_body(a["body"], EMBED_DESCRIPTION_LIMIT)
+            time.sleep(Constants.DISCORD_POST_DELAY_SEC)
+            body_chunks = _split_body(a["body"], Constants.DISCORD_EMBED_DESCRIPTION_LIMIT)
             batch, batch_len = [], 0
             for i, chunk in enumerate(body_chunks):
-                if batch_len + len(chunk) > EMBED_TOTAL_PER_MESSAGE and batch:
+                if batch_len + len(chunk) > Constants.DISCORD_EMBED_TOTAL_PER_MESSAGE and batch:
                     data = {"embeds": batch, "username": Constants.BOT_NAME, "avatar_url": Constants.BOT_AVATAR_URL}
                     resp = requests.post(webhook_url, json=data)
                     resp.raise_for_status()
-                    time.sleep(POST_DELAY_SEC)
+                    time.sleep(Constants.DISCORD_POST_DELAY_SEC)
                     batch, batch_len = [], 0
                 title = f"{a['idx']}. {a['title']}"[:256]
                 if len(body_chunks) > 1:
@@ -80,7 +77,7 @@ def send_to_discord(content):
     chunk_size = Constants.DISCORD_CHUNK_SIZE
     chunks = [final_content[i:i+chunk_size] for i in range(0, len(final_content), chunk_size)]
     for chunk in chunks:
-        time.sleep(POST_DELAY_SEC)
+        time.sleep(Constants.DISCORD_POST_DELAY_SEC)
         data = {"content": chunk, "username": Constants.BOT_NAME, "avatar_url": Constants.BOT_AVATAR_URL}
         resp = requests.post(webhook_url, json=data)
         resp.raise_for_status()

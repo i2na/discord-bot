@@ -4,7 +4,8 @@ class Constants:
     # 1. 환경 변수
     OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
     DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL")
-    OPENAI_MODEL = "gpt-4o"
+    OPENAI_MODEL = "gpt-4.1"
+    OPENAI_MAX_TOKENS = 16384
     
     # 2. 크롤링 설정
     USER_AGENT = {
@@ -25,3 +26,6 @@ class Constants:
     BOT_NAME = "SISA-GO"
     BOT_AVATAR_URL = "https://cdn-icons-png.flaticon.com/512/2965/2965879.png"
     DISCORD_CHUNK_SIZE = 1900
+    DISCORD_EMBED_DESCRIPTION_LIMIT = 4096
+    DISCORD_EMBED_TOTAL_PER_MESSAGE = 6000
+    DISCORD_POST_DELAY_SEC = 2
