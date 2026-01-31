@@ -13,13 +13,11 @@ class Constants:
     }
     
     # [URL, Source Name, Fetch Limit]
+    # Google News RSS (Korea): World, Business, Technology - 중요도 기준 정렬
     NEWS_SOURCES = [
-        ("https://www.yna.co.kr/rss/economy.xml", "연합뉴스 경제", 5),
-        ("https://www.yna.co.kr/rss/international.xml", "연합뉴스 국제", 5),
-        ("https://www.yna.co.kr/rss/industry.xml", "연합뉴스 산업/IT", 5),
-        ("https://www.hankyung.com/feed/economy", "한국경제 경제", 5),
-        ("https://www.hankyung.com/feed/international", "한국경제 국제", 5),
-        ("https://www.hankyung.com/feed/it", "한국경제 IT", 5),
+        ("https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtdHZHZ0pMVWlnQVAB?hl=ko&gl=KR&ceid=KR:ko", "World", 5),
+        ("https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx6TVdZU0FtdHZHZ0pMVWlnQVAB?hl=ko&gl=KR&ceid=KR:ko", "Business", 5),
+        ("https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGRqTVhZU0FtdHZHZ0pMVWlnQVAB?hl=ko&gl=KR&ceid=KR:ko", "Technology", 5),
     ]
 
     # 3. 디스코드 봇 설정

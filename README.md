@@ -17,14 +17,15 @@ SISA-GO fetches news from major Korean outlets, analyzes them using an LLM, and 
 
 ### News Sources
 
-The bot collects articles from 6 RSS feeds (5 articles each, 30 total):
+The bot fetches from Google News RSS Korea (5 per topic, outputs 2 per topic = 6 total):
 
-| Source               | Category                            |
-| -------------------- | ----------------------------------- |
-| Yonhap News          | Economy, International, Industry/IT |
-| Korea Economic Daily | Economy, International, IT          |
+| Feed       | Fetch | Output | Description                |
+| ---------- | ----- | ------ | -------------------------- |
+| World      | 5     | 2      | International, geopolitics |
+| Business   | 5     | 2      | Economy, finance, markets  |
+| Technology | 5     | 2      | IT, AI, tech industry      |
 
-**Fetch criteria:** Takes the first N items from each feed in feed order. RSS feeds typically list articles by publication date (newest first). No view count or time filter—publishers control the order.
+**Fetch criteria:** Google News ranks by importance (not recency). LLM selects the 2 most significant from each topic.
 
 ### Schedule
 
