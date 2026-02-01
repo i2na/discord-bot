@@ -73,6 +73,7 @@ class DiscordNotifier(Notifier):
         resp.raise_for_status()
 
         articles = _parse_articles(content)
+        articles.sort(key=lambda a: int(a["idx"]))
 
         if articles:
             for a in articles:
