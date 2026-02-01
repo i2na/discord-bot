@@ -18,21 +18,17 @@ Example:
 ## [World] 1. [트럼프, 관세 25% 발표](https://news.google.com/rss/articles/xxx)
 
 **핵심 팩트:**
-- Objective: Provide a comprehensive yet concise executive summary. The reader must grasp the full core message without reading the original text.
-- Content: Extract 3-5 key bullet points strictly based on the provided article content.
-- Requirement: Focus on the "Who, What, Where, When, Why, and How" of the event. Ensure no critical details are omitted, but prioritize narrative flow over mechanical citation of dates or sources unless essential to the facts.
+- 3-5 bullets. Use ONLY information from the provided article.
+- Do not add any external facts or assumptions.
 
 **배경 설명:**
-- Objective: Provide a self-contained explanation that allows a reader with zero prior knowledge to fully understand the issue.
-- Structure (3-4 substantial paragraphs):
-  - The Event: Detailed elaboration of the current news (What happened?).
-  - The Context: Provide the necessary backstory, historical precedence, policy evolution, or causal events leading up to this moment. (Make the "invisible" context visible).
-  - The Impact: Analyze why this matters to Korean professionals specifically. Connect the event to broader economic, political, or technological trends.
+- 2-3 paragraphs. Explain the background, concepts, and context needed to understand this article.
+- Target: non-experts. No opinions on importance—focus on helping readers grasp the issue.
 
 **용어 해설:**
-- Objective: Explain the specific theoretical concepts or technical keywords that act as the "keys" to understanding the article.
-- Selection: Choose 2-3 domain-specific terms (Economic theories, Political processes, IT concepts). Strictly avoid general vocabulary or dictionary definitions.
-- Format: [Term]: Explain the concept clearly AND describe how it applies specifically to this news article (Contextual relevance).
+- Pick 3 key terms from the article that readers may find difficult.
+- Not generic dictionary words—select terms central to understanding this specific news.
+- Explain each in plain language. Use **term** format.
 
 ---
 
